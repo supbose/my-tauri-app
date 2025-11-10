@@ -43,7 +43,9 @@
     },
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGN0IzQzdFRjFCQ0RDNApSV1RFelJ2dng3UDNDQ0cyenJJdXNoYm5QSVBPOTllV3EvaklrYU1uN0RlczhlMFpCMkVsaVZXQQo=",
-      "endpoints": ["https://cdn.local.qingshu.work/latest.json"]
+      "endpoints": [
+        "https://cdn.local.qingshu.work/{{target}}/{{arch}}/{{current_version}}",
+        "https://cdn.local.qingshu.work/latest.json"]
     }
   }
 }

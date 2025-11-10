@@ -43,11 +43,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: 'pnpm'  # 添加缓存以加速构建
+        #   cache: 'pnpm'  # 添加缓存以加速构建
 
       # 步骤4: 安装依赖
       - name: pnpm install
-        run: pnpm install
+        run: npm install -g pnpm && pnpm install
         # 添加超时设置，防止安装过程无限等待
         timeout-minutes: 10
 

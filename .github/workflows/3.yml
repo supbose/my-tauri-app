@@ -1,16 +1,24 @@
 name: konstruado_de_eldonaĵo
-# Triggera Maniero.
+# Triggera Maniero - 触发方式
 on:
+  # 当推送以v开头的标签时触发，例如 v1.0.0, v2.1.3-beta 等
   push:
     tags:
-      - "v*"
+      - "v*"  # 匹配任何以v开头的标签
+  # 允许手动触发工作流
   workflow_dispatch:
+    # 可选：添加输入参数，允许手动触发时自定义版本信息
+    inputs:
+      version:
+        description: 'Version to build (e.g., 1.0.0)'
+        required: false
+        default: ''
 
 jobs:
   release:
     # Ĉar necesas krei eldonaĵon, necesas agordi skribpermeson.
     permissions:
-      contents: write
+      contents: write  # 授予写入权限以创建发布
     strategy:
       fail-fast: false
       matrix:
@@ -20,39 +28,62 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
+      # 步骤1: 检出代码仓库
       - name: Elpaki Deponejon
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 确保获取完整历史记录，对于版本构建很重要
 
+      # 步骤2: 安装 Rust 工具链
       - name: Instali Rust-stabilan
         uses: dtolnay/rust-toolchain@stable
 
+      # 步骤3: 设置 Node.js 环境
       - name: Agordi Node
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+          cache: 'pnpm'  # 添加缓存以加速构建
 
-      - name: Agordi Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      # 步骤4: 安装依赖
+      - name: pnpm install
+        run: pnpm install
+        # 添加超时设置，防止安装过程无限等待
+        timeout-minutes: 10
 
-      - name: Instali Antaŭpartajn Dependaĵojn
-        run: bun install
+      # 步骤5: 可选 - 运行构建前检查
+      - name: Kontroli antaŭ konstruado
+        run: |
+          echo "Verifying environment..."
+          rustc --version
+          node --version
+          pnpm --version
+        shell: bash
 
-        # Uzi Tauri-actions
+      # 步骤6: 构建应用
+      # Uzi Tauri-actions
       - name: Konstrui la Aplikaĵon
         id: build
         uses: tauri-apps/tauri-action@v0
         env:
+          # 注意：GITHUB_TOKEN 必须有写入权限，这里使用自定义的 TAURI_TOKEN
+          # 请确保在 GitHub 仓库的 Settings > Secrets and variables > Actions 中正确配置这些密钥
           GITHUB_TOKEN: ${{ secrets.TAURI_TOKEN }}
-          # Privata Ŝlosilo
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY}}
+          
+          # Privata Ŝlosilo - 用于签名应用程序
+          # TAURI_SIGNING_PRIVATE_KEY 是一个多行密钥，需要以正确格式存储在 GitHub Secrets 中
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          
           # Pasfrazo por la Privata Ŝlosilo
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: eldono-v__VERSION__
-          releaseName: "Eldonaĵo v__VERSION__"
-        #   releaseBodyFile: .github\workflows\markdown\eldona.md
-          releaseDraft: false
-          prerelease: false
+          # 注意：tagName 应与触发条件中的标签格式匹配
+          # __VERSION__ 是 tauri-action 的特殊占位符，会被实际版本号替换
+          tagName: v__VERSION__  # 例如，当推送标签 v1.0.0 时，会创建发布标签 v1.0.0
+          releaseName: "Eldonaĵo v__VERSION__"  # 发布名称
+          # releaseBodyFile: .github/workflows/markdown/eldona.md  # 可选：指定发布说明文件
+          releaseDraft: false  # 直接发布，不创建草稿
+          prerelease: false    # 不标记为预发布
           args: ${{ matrix.args }}
+        # 添加超时设置
+        timeout-minutes: 30

@@ -1,0 +1,35 @@
+{
+  "version": "1.0.1",
+  "notes": "我是更新说明",
+  "pub_date": "2025-11-10T11:49:00.375Z",
+  "platforms": {
+    "win64": {
+      "signature": "",
+      "url": ""
+    },
+    "linux": {
+      "signature": "",
+      "url": ""
+    },
+    "darwin": {
+      "signature": "",
+      "url": ""
+    },
+    "darwin-aarch64": {
+      "signature": "",
+      "url": ""
+    },
+    "darwin-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGN0IzQzdFRjFCQ0RDNApSV1RFelJ2dng3UDNDQ0cyenJJdXNoYm5QSVBPOTllV3EvaklrYU1uN0RlczhlMFpCMkVsaVZXQQo=",
+      "url": "https://cdn.local.qingshu.work/my-tauri-app.app.tar.gz"
+    },
+    "linux-x86_64": {
+      "signature": "",
+      "url": ""
+    },
+    "windows-x86_64": {
+      "signature": "",
+      "url": ""
+    }
+  }
+}

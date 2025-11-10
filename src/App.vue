@@ -5,6 +5,10 @@
       <button class="btn" @click="greet" style="margin-left: 200px">Greet</button>
     </div>
 
+    <div style="margin: 0 auto;">
+      <button type="button" @click="toggleDevtools">Toggle Devtools</button>
+    </div>
+
     <h1 class="">Welcome to Tauri + Vue</h1>
 
     <div class="row">
@@ -54,6 +58,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 
 const greetMsg = ref('')
 const name = ref('')
+// 前端 JavaScript 示例
+
+
+// 监听特定按键组合（例如 Ctrl+Shift+I）
+
 
 // async function greet() {
 //   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -99,6 +108,10 @@ async function greet() {
   })
 
   document.body.appendChild(div)
+}
+
+const toggleDevtools =async()=>{
+  await invoke('toggle_devtools');
 }
 
 const isShow = ref()

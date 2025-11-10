@@ -1,8 +1,10 @@
-name: "publish"
+name: tauri
+# Triggera Maniero.
 on:
   push:
-    branches:
-      - release
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 jobs:
   publish-tauri:
